@@ -1,0 +1,125 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+df <- read.csv("housing_California.csv", stringsAsFactors = T)
+df
+```
+```{r}
+str(df)
+```
+```{r}
+summary(df)
+```
+
+
+# Visualización (gráficos base)
+
+```{r}
+plot(df$housing_median_age)
+```
+```{r}
+plot(df$housing_median_age, df$total_rooms)
+```
+```{r}
+plot(df$housing_median_age, df$total_rooms,
+     xlab = "Edad promedio inmueble",
+     ylab = "Total habitaciones",
+     main = "Relación edad inmueble nº habitaciones")
+```
+```{r}
+plot(df$housing_median_age, df$total_rooms,
+     xlab = "Edad promedio inmueble",
+     ylab = "Total habitaciones",
+     main = "Relación edad inmueble nº habitaciones",
+     las = 1)
+```
+```{r}
+plot(df$housing_median_age, df$total_rooms,
+     xlab = "Edad promedio inmueble",
+     ylab = "Total habitaciones",
+     main = "Relación edad inmueble nº habitaciones",
+     las = 2)
+```
+
+```{r}
+plot(df$housing_median_age, df$total_rooms,
+     xlab = "Edad promedio inmueble",
+     ylab = "Total habitaciones",
+     main = "Relación edad inmueble nº habitaciones",
+     las = 0,
+     col = "blue")
+```
+
+
+```{r}
+boxplot(df$total_rooms)
+```
+```{r}
+hist(df$total_rooms)
+```
+
+# Ggplot2
+
+```{r}
+library(ggplot2)
+```
+
+Está basado en capas de visualización
+1. El dataset
+2. Tipo de visualización
+... Capas opcionales
+
+Para concatenear capas se usa el símbolo +
+Las capas de visualización tienen el nombre **geom_**
+Dentro de una capa de visualización se definen las columnas que intervienen en la visualización, los componentes estéticos (función **aes**)
+
+```{r}
+ggplot(df) +
+  geom_point(aes(x = housing_median_age, 
+                 y = total_rooms))
+```
+```{r}
+ggplot(df) +
+  geom_boxplot(aes(x = housing_median_age, 
+                   fill = ocean_proximity))
+```
+```{r}
+ggplot(df) +
+  geom_boxplot(aes(x = housing_median_age, 
+                   fill = ocean_proximity)) + coord_flip()
+```
+
+
+```{r}
+ggplot(df) +
+  geom_point(aes(x = housing_median_age, 
+                 y = total_rooms, 
+                 colour = ocean_proximity))
+```
+
+```{r}
+colnames(df)
+```
+```{r}
+ggplot(df) + 
+  geom_point(aes(x = total_rooms, y = total_bedrooms)) +
+  geom_smooth(aes(x = total_rooms, y = total_bedrooms))
+```
+
+```{r}
+ggplot(df) +
+  geom_point(aes(x = housing_median_age, 
+                 y = total_rooms)) + 
+  geom_smooth(aes(x = housing_median_age, 
+                 y = total_rooms))
+```
+
+
+
+
+
+
+

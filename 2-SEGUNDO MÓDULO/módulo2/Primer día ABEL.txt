@@ -1,0 +1,92 @@
+Profesor ABEL SORIANO
+Aprender siempre de las cagadas es fundamental. Los éxitos son importantes pero también aprender de los errores.
+
+
+Barbaro, Venezuela 6
+Sabe algo de informática
+Sabe analizar datos en su experiencia, telemetria (medición de datos a distancia)
+No está aqui por el dinero, más por su situación de extrangero y su país
+
+Senia, Peru 4
+Ingeniera en alimentos
+No sabe programación
+Aprender data y regularizar datos
+
+Jorge, Mexico 2
+Finanzas y contabilidad
+Inteligencia de negocio, empresa, competencia
+
+Janette, Peru 2
+Docente de vocación y abogada
+Reto personal lo de DATA y mejorar economicamente
+
+Kelvin, Mexicano 4
+Ingeniero civil
+Reto personal
+
+Juan Carlos, Peru 1
+Marketing y mercado
+Desarrollo de marcas e inversión
+
+Mario, Cosa Rica 4
+Igeniero de software
+Desarrollo
+Mejora salarial y profesional
+
+Ana, Mexico 4
+Admin de Hoteles
+Buena en núemros
+Analisis de datos para hoteles
+
+Amadeo, España 4
+Desarrollo de videojuegos
+Arquitectura en videojuegos
+Ganar más dinero y mejora profesional
+
+Irene, Venezuela 1
+Administrador público
+Magister en productividad
+Grupo Indra
+
+Daniel, Colombia de Venezuela 1
+Ingeniero eléctrico
+Le gustan los dato y el negocio
+
+Mehdi, Marruecos 2
+Just eat logistica
+Pasta y estrategia dentro de la empresa
+
+Boris, Peru 2
+Ingeniero público
+Quiere montar su propia empresa
+
+Antonio, España 1
+Finazas y contabilidad
+
+Jhon, España 2
+ADE
+Kutxabank
+Interés en cambiar de especialidad
+
+David, Colombiano 1
+Contador público, consultoria financiera y legal
+Tema de compilance, legal y datos
+
+Nacho, Colombia 1
+Marketing
+Mejorar profesionalmente
+
+Vivianne, Cuba 7
+Ciencias de la computación
+Programación
+
+Anderson, Colombia 6
+Administrador de empresas
+Mejorar su perfíl profesional
+
+
+Grupo de +- 20 personas
+El 75% de LATAM, 20% España y 5% Marruecos
+La mayoria no tiene conocimientos previos en la cinecia de datos
+Algunos si tienen experiencia en programación, pero pocos, entorno un 20%
+Motivos principales de entrar al master: mejorar profesional o economicamente

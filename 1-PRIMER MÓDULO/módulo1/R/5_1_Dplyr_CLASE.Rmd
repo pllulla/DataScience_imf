@@ -1,0 +1,459 @@
+---
+title: "Dplyr"
+output:
+  html_document:
+    df_print: paged
+  word_document: default
+autor: Juan Manuel Moreno
+---
+
+Cuando se trabaja con un conjunto de datos, debemos saber qué queremos hacer con los datos, encontrar funciones o, saber qué paquetes importar para transformación y manipulación de datos. Gracias a **Dplyr**, podemos transformar los datos de una manera muy sencilla.
+
+Su lógica se basa en el uso de *verbos*, que no son más que funciones que corresponden con la mayor parte de los procesos de manipulación de datos, lo cuál, hace que sea muy intuitivo el trabajo con esta librería y saber qué función utilizar para una transformación específica.
+
+**Dplyr**, no es un paquete que ya venga instalado en nuestra distribución de R, por lo tanto, es necesaria su instalación.
+
+```{r}
+# Instalamos
+# install.packages("dplyr")
+```
+
+```{r}
+# Carga de un paquete en nuestra sesión de trabajo
+library(dplyr)
+```
+
+En el presente notebook se explicaran las siguientes funciones de dplyr:
+
+* **`filter`**
+* **`select`**
+* **`Operador Pipe %>%`**
+* **`mutate`**
+* **`transmute`**
+* **`summarise`**
+* **`group_by`**
+* **`distinct`**
+* **`rename`**
+* **`arrange`**
+* **`sample_n`**
+* **`sample_frac`**
+* **`recode`**
+* **`ifelse`**
+* **`case_when`**
+
+
+Utilizaremos el siguiente dataset para trabajar. **`storms`**. Importante, para poder trabajar con este dataset, previamente debe tenerse cargado dplyr, ya que es un dataset que viene preinstalado con la librería, si se quieren conocer otros datasets pre-cargados en R, utilizar el comando **`data()`**
+
+```{r}
+head(storms)
+```
+
+Realizamos una pequeña exploración sobre los datos.
+```{r}
+summary(storms)
+```
+
+```{r}
+unique(storms$name)
+```
+
+```{r}
+str(storms)
+```
+
+```{r}
+colnames(storms)
+```
+```{r}
+apply(is.na(storms),2,sum)
+```
+
+```{r}
+apply(is.na(storms),2,sum)/nrow(storms) * 100
+```
+
+## Filter
+
+La función **filter** selecciona columnas, en función del valor de sus filas. Por ejemplo, seleccionaremos sólo las filas con valor -65.9 en la columna 'long'.
+
+```{r}
+# Seleccionaremos sólo las filas con valor -65.9 en la columna 'long'.
+
+filter(storms, long == -65.9 )
+```
+
+```{r}
+
+storms[storms$year == 1975, ]
+
+# filter(storms, year == 1975 )
+```
+
+
+Vemos que es mucho más sencillo este tipo de selección que realizar `storms[storms$long == -65.9, ]`. Se mostrará un nuevo ejemplo, además de seleccionar solamente las filas con valor 'long' -65.9, también será requerimiento que el valor de 'year' sea 1981.
+
+```{r}
+filter(storms, long == -65.9 , year == 1981)
+
+# storms[(storms$long == -65.9 & storms$year == 1981), ]
+```
+
+Esto, es mucho más legible que: `storms[(storms$long == -65.9 & storms$year == 1981), ]`
+
+### Ejercicio 1.
+
+Toma el dataset **iris** y, filtra el dataset por la columna Species por los tipos de flor setosa o versicolor.
+
+#### Solución
+```{r}
+# En clase
+filter(iris, Species == "setosa" | Species == "versicolor")
+```
+
+```{r}
+filter(iris, Species == "setosa" | Species == "versicolor",
+             Sepal.Length > 6)
+
+# iris[(iris$Species == "setosa" | iris$Species == "versicolor")
+#       & iris$Sepal.Length > 6, ]
+```
+
+## Select
+
+De una manera similar a las bases de datos relacionales, con la función **select**, seleccionamos las columnas que queremos utilizar, por ejemplo, seleccionaremos del dataframe las columnas: 'name' y 'status'.
+
+```{r}
+select(storms, name, status) # Equivalente: storms[, c("name", "status")]
+```
+
+Puede apreciarse que, no es necesario utilizar el operador **$** para seleccionar las columnas, basta con que el primer argumento sea el dataframe y, los siguientes, los nombres de las columnas.
+
+También podemos seleccionar rangos, por ejemplo, se tomarán las columnas desde: 'year' a 'hour' (ambas inclusive).
+
+```{r}
+colnames(storms)
+```
+
+```{r}
+select(storms, year:hour)
+```
+
+Del mismo modo, también podemos seguir indexando por filas, por ejemplo, realizando una selección de las 5 primeras.
+
+```{r}
+select(storms[0: 5, ], year:hour)
+```
+
+Existen además parámetros muy interesantes y de gran ayuda cuando no conocemos exactamente el nombre de la columna que queramos seleccionar en cuestión. Estos parámetros son:
+
+* **`starts_with`**: Selecciona columnas que comienzan con una cadena de texto.
+```{r}
+colnames(storms)
+```
+
+```{r}
+head(select(storms, starts_with("y")), 2)
+```
+
+* **`ends_with`**: Selecciona columnas que finalizan con una cadena de texto.
+```{r}
+head(select(storms, ends_with("y")), 2)
+```
+
+* **`contains`**: Selecciona columnas que contienen una cadena de texto.
+```{r}
+head(select(storms, contains("on")), 2)
+```
+
+## Pipe %>%
+
+Similar al operador **|** en Linux, gracias a dplyr, podemos utilizar un operador que nos permite concatenar funciones **%>%**, es decir, a los resultados de una primera función, aplicar una nueva función, todo a través de una sola línea de código.
+
+Para ejemplificar este operador, se tomará el ejemplo previo: Además de seleccionar solamente las filas con valor 'long' -65.9, también será requerimiento que el valor de 'year' sea 1981. A este ejemplo se añadirá la restricción de mostrar únicamente con las columnas: 'status' y 'category'.
+
+```{r}
+storms[storms$long == -65.9 & storms$year == 1981, 
+       c("category", "status")]
+```
+
+```{r}
+filter(storms, long == -65.9 , year == 1981) %>%
+    select(status, category)
+```
+
+Es posible seguir añadiendo funciones, por ejemplo, cambiaremos las columnas a proyectar por 'wind' y 'pressure', el año a filtrar por 2001, finalmente mostraremos el resumen estadístico de los resultados.
+
+```{r}
+filter(storms, long == -65.9 , year == 2001) %>%
+  select(wind, pressure) %>%
+  summary()
+```
+
+### Ejercicio 2
+
+Selecciona las columnas mpg, hp y cyl de todos los vechículos del dataset **mtcars** que tengan sueperen la media de las millas por galón.
+
+#### Solución
+```{r}
+# En clase
+# Forma 1
+select(mtcars, mpg, hp, cyl) %>% filter(mpg >= mean(mpg))
+
+# Forma 2
+# mtcars %>% 
+#   select(mpg, hp, cyl) %>%
+#   filter(mpg >= mean(mpg))
+```
+
+## Mutate
+
+La función **mutate**, es utilizada para crear columnas en base a otras ya existentes. Además agrega la nueva columna al dataframe.
+
+```{r}
+# storms$presion_ratio = round(storms$pressure / storms$wind,2)
+```
+
+```{r}
+mutate(storms, 
+       presion_ratio = round(pressure / wind),2) %>% 
+  
+  select(pressure, wind, presion_ratio) %>% 
+  head(., 5)
+
+
+```
+
+## Transmute
+
+Es igual a **mutate**. Sin embargo, **transmute** realiza la operación, pero solamente devuelve las nuevas columnas.
+
+```{r}
+transmute(storms, 
+          presion_ratio   = round((pressure / wind),2) ,
+          mean_ratio_wind = presion_ratio/mean(wind)) %>% 
+  head(.,10)
+```
+### Ejercicio 3
+
+Con el dataset **iris** crea dos nuevas columnas agregándolas al dataframe que sean:
+
+* dimension.sepal: Cuyo resultado sea la división de Sepal.Length y Sepal.Width
+* dimension.petal: Cuyo resultado sea la división de Petal.Lengt y Petal.Width
+
+Muestra de este dataframe las columnas Species, dimension.sepal, dimension.petal
+
+#### Solución
+```{r}
+# En clase
+iris %>%
+  mutate(dimension.sepal = round(Sepal.Length/Sepal.Width, 2),
+         dimension.petal = round(Petal.Length/Petal.Width, 2))
+```
+
+## Summarise
+
+La función **summarise**, permite confeccionar resúmenes sobre los datos de forma personalizada mostrando estadísticas sobre variables. 
+
+Para ayudar en la obtención de estadísticas, dplyr integra nuevas funciones que realizan las siguientes operaciones:
+
+* **first**: Muestra el primer elemento de una columna del dataframe.
+* **last**: Muestra el último elemento de una columna del dataframe.
+* **n**: Elementos de la columna del dataframe.
+* **n_distinct**: Número de elementos únicos de la columna del dataframe.
+
+```{r}
+storms %>% summarise(sum_pressure = sum(pressure),
+                     min_wind     = min(wind),
+                     max_wind     = max(wind),
+                     range_wind   = (max(wind) - min(wind)),
+                     range_dos    = range(wind),
+                     first_row_status = first(status),
+                     last_row_status  = last(status),
+                     unique_categories = n_distinct(category),
+                     total_rows = n())
+```
+
+## Group_by
+
+Al igual que en SQL, a través de **group_by**, podemos mostrar el dataframe agrupado por variables o estadísticas de las mismas.
+
+```{r}
+storms %>% group_by(category, status)
+```
+
+```{r}
+storms %>% group_by(category, status) %>%
+           summarise(media_viento = mean(wind),
+                     total_category = n()) 
+
+```
+
+```{r}
+storms %>% group_by(category, status) %>%
+           summarise(media_viento = mean(wind),
+                     total_category = n())%>%
+  na.omit()
+```
+
+```{r}
+storms %>%
+  select(year, name, pressure, wind) %>% 
+  group_by(name, year) %>% 
+  summarise(media_presion = round(mean(pressure), 2),
+            media_viento  = round(mean(wind),2)) %>% 
+  arrange(desc(media_presion)) #Si queremos que sea descendente, función desc()
+```
+
+## Distinct
+
+Elimina filas duplicadas de un dataframe.
+
+```{r}
+df <- data.frame("col_uno"= c(1,2,3,4,5,6,6,6), 
+                 "col_dos"= c(1,7,8,4,5,6,6,5)
+                 )
+df
+```
+```{r}
+distinct(df)
+```
+
+## Rename
+
+Su uso es muy sencillo, simplemente pasamos como argumento el dataframe y el nuevo nombre que utilizaremos para una columna determinada. Por ejemplo, se cambiará el nombre de la variable 'status' por 'tipo'.
+
+```{r}
+df <- rename(storms, tipo = status)
+
+df
+```
+
+### Ejercicio 4
+
+Renombra la columna mpg de **mtcars** a: milles_per_gallon
+
+#### Solución
+```{r}
+# En clase
+mtcars %>% rename(milles_per_gallon = mpg) %>% colnames
+```
+
+## Arrange
+
+La función **arrange**, se utiliza para ordenar un dataframe de dos formas diferentes: 1. De forma descendente con **desc**, 2. Ascendente (por defecto). En el siguiente ejemplo, se ordenará el dataframe por las columnas lat y long.
+
+```{r}
+arrange(storms, lat, long) %>% head(., 10)
+```
+
+En este otro ejemplo, se ordenará de forma descendente todo el dataframe por la columna 'year'
+```{r}
+arrange(storms, desc(year)) %>% head(., 10)
+```
+
+## Sample_n
+
+Devuelve una muestra de n filas aleatorias, podemos utilizar `replace=T` para hacer muestreos.
+
+```{r}
+sample_n(storms, 5)
+```
+
+### Ejercicio 5
+
+Lee el dataframe 'airpots.csv' y, obtén una muestra de 60 filas sobre las columnas AirportID y City ¿cómo cambia el índice (Id del aeropuerto)? 
+
+#### Solución
+```{r}
+# En clase
+df <- read.csv("airports.csv", 
+               sep = ";", 
+               stringsAsFactors = T, 
+               na.strings = "\\N" # Equivalente a na_values de PAndas
+               ) %>% 
+  sample_n(60) %>%
+  select(AirportID, City)
+
+df
+```
+
+```{r}
+summary(df)
+```
+
+
+## Sample_frac
+
+Devuelve una muestra aleatoria del dataframe de forma porcentual, podemos utilizar `replace=T` para hacer muestreos.
+
+```{r}
+sample_frac(storms, 0.01)
+```
+
+## Recode
+
+Permite cambiar el nombre de factores.
+
+```{r}
+df <- iris
+```
+
+```{r}
+df$Species <- recode(as.character(df$Species),
+                               "setosa" = "Flor_Uno",
+                               "versicolor" = "Flor_Dos",
+                               "virginica" = "Flor_Tres") %>% as.factor
+```
+
+```{r}
+table(df$Species)
+```
+
+```{r}
+df <- iris
+
+df$Species <- recode(as.character(df$Species),
+                               "setosa" = "Tulipan",
+                               .default = "OTRA_FLOR") %>% as.factor
+
+table(df$Species)
+
+df
+```
+
+## Ifelse
+
+Permite crear una nueva columna en función de otros valores.
+
+```{r}
+summary(mtcars$hp)
+```
+
+```{r}
+mtcars %>% 
+  mutate(GAMA.VEHICULO = ifelse(hp > 180, "ALTA GAMA", "GAMA ESTÁNDAR")) %>%
+  select(hp, GAMA.VEHICULO)
+```
+
+```{r}
+mtcars$hp
+```
+
+```{r}
+mtcars %>% mutate(CATEGORIA = ifelse(hp %in% 51:150, "ESTÁNDAR", 
+                                     ifelse(hp %in% 151:180, "ALTA", "TOP"))) %>% select(hp, CATEGORIA)
+```
+
+## Case_when
+
+Similar a ifelse, nos permite seleccionar ciertos rangos a los que agregar un valor específico.
+```{r}
+mtcars %>% mutate(CATEGORIA.DOS = 
+                    
+                    case_when(
+                  hp <= mean(mtcars$hp) ~ "ESTÁNDAR",
+                  hp > mean(mtcars$hp) & mtcars$hp <= 180 ~ "ALTA",
+                  hp > 180 ~ "TOP")) %>% 
+  select(hp, CATEGORIA.DOS)
+```
+

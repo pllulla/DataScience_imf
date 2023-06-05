@@ -1,0 +1,840 @@
+---
+title: "Estructuras de datos. Arrays, listas, factores, matrices y dataframes"
+output:
+  html_document:
+    df_print: paged
+  word_document: default
+autor: Juan Manuel Moreno
+---
+
+Dentro de R, existen diferentes tipos de estructuras de datos con las que podemos trabajar, dentro de esta sección, explicaremos en qué consisten y mostraremos algunas de sus principales funciones:
+
+* **Vectores**
+* **Arrays**
+* **Listas**
+* **Factores**
+* **Matrices**
+* **Dataframes**
+
+## Arrays
+
+A diferencia de los vectores, en un **array**, todos sus elementos deben ser del mismo tipo, también son indexables. Para crear un array, haremos uso de la función **`array`**.
+
+```{r}
+# Definimos un nuevo array
+my.arr <- array(data = c(1,2,3,4), dim = c(2,2))
+
+my.arr
+```
+
+Podemos ver la estructura de las dimensiones haremos uso de la función **`dim`**
+```{r}
+dim(my.arr) # Dos filas y dos columnas
+```
+
+También es posible crear un array a través de un vector ya existente:
+```{r}
+no.rep.dos <- sample(30:60, 10, replace = F)
+no.rep.dos
+```
+
+Para cambiar la estructura del array podemos pasar un vector que respete la nomenclatura (filas x columnas)
+```{r}
+length(no.rep.dos) # Divisible entre 2 y 5
+
+dim(no.rep.dos) <- c(5,2) # 5 Filas por dos columnas
+```
+
+```{r}
+no.rep.dos # Vector transformado en array
+```
+
+```{r}
+class(no.rep.dos)
+```
+
+A continuación, mostraremos diferentes maneras de seleccionar elementos de un array.
+```{r}
+new.arr <- array(1:40, c(5, 4, 2))
+
+new.arr
+```
+
+
+```{r}
+print(dim(new.arr)) # 5 filas por 4 columnas de dos dimensiones
+# Podríamos inferir cada dimensión como una sub-matriz
+```
+
+```{r}
+# Sólo primera dimensión.
+new.arr[,,1]
+```
+
+Nótese que ante ausencia de cualquier valor indicamos todos, por ejemplo, la segunda columna de la segunda dimensión:
+```{r}
+new.arr[, 2, 2 ]#dejamos libre filas, indicamos todas
+```
+
+```{r}
+# Columna 2 de las dos dimensiones
+new.arr[,2,1:2] # También acepta rangos personalizados n a m
+```
+
+
+```{r}
+# Fila 4 de la segunda dimensión.
+new.arr[4, ,2]
+```
+
+
+```{r}
+# Elementos en tercera y cuarta posición (tercera y cuarta columna) de la quinta fila, de ambas dimensiones
+new.arr[5, c(3,4) , ]
+```
+
+
+```{r}
+# Todas las filas de la segunda columna en adelante de la primera dimensión
+new.arr[ , 2:length(new.arr[1,,1]), 1]
+```
+
+Vemos la longitud de cada componente
+```{r}
+length(new.arr[1 , , 1]) # Columnas
+```
+```{r}
+length(new.arr[ , 1, 1]) # Filas
+```
+
+```{r}
+length(new.arr[1 , 1, ]) # Dimensiones
+```
+
+Análogamente, también es posible indexar un array a través de otro array.
+```{r}
+index <- array(c(2, 1:3, 1:2), c(2,3))
+
+index
+```
+
+```{r}
+new.arr[index]
+```
+
+Del mismo modo que los vectores, sobre los arrays también podemos aplicar operaciones aritméticas, como las descritas anteriormente, mostramos algunos ejemplos:
+```{r}
+# Suma
+sum(new.arr)
+```
+
+
+```{r}
+# Media
+mean(new.arr)
+```
+
+
+```{r}
+# Rango
+range(new.arr)
+```
+
+
+```{r}
+# Máximo
+max(new.arr)
+
+# ... más funciones sobre vectores
+```
+
+Evidentemente, estas operaciones también funcionan a nivel de dimensión, fila, columna de los arrays
+```{r}
+sum(new.arr[2, , 1]) #Suma de los elementos de la segunda fila de la primera dimensión.
+```
+
+No obstante, existen operaciones especiales para los arrays que funcionan a nivel de eje (fila x columna), que son las que se muestran a continuación:
+```{r}
+# Suma de columnas 
+colSums(new.arr, dims = 1) # Suma de todas las columnas por fila
+```
+
+```{r}
+colSums(new.arr, dims = 2) # Suma de todas las columnas por dimensión
+```
+
+
+```{r}
+# Suma de filas
+rowSums(new.arr, dims = 1) # Suma de todas las filas por fila y dimensión
+```
+
+
+```{r}
+rowSums(new.arr, dims = 2) # Suma de todas las filas por columna y dimensión (elemento a elemento)
+```
+
+
+```{r}
+# Media de columnas
+colMeans(new.arr, dims = 1) # Media de columnas por columna
+colMeans(new.arr, dims = 2) # Media de columnas por dimensión
+```
+
+Si se quieren permutar las dimensiones de un array, se puede hacer uso de la función **`aperm`**
+```{r}
+aperm(new.arr)
+```
+
+Los arrays, también tienen una clase única.
+```{r}
+class(new.arr)
+```
+
+### Ejercicio 1
+
+Toma los siguientes vectores:
+```{r}
+vector.uno <- c(1,3,4,5)
+vector.dos <- c(10,11,12,13,14,15)
+```
+
+Crea con los mismos una matriz de 3x3 de dos dimensiones
+
+#### Solución
+```{r}
+# En clase
+```
+
+### Ejercicio 2
+Obtén una muestra de 30 números (con o sin reemplazamiento, es indiferente), mediante este vector, crea un array que sea de 5 filas por 2 columnas y 3 dimensiones.
+
+#### Solución
+```{r}
+# En clase
+
+```
+
+### Ejercicio 3
+
+Toma el array del ejercicio 1, muestra la segunda columna de la primera dimensión y, la tercera fila de la segunda dimensión.
+
+#### Solución
+```{r}
+# En clase
+```
+
+### Ejercicio 4
+
+Con los vectores anteriores (del ejercicio 3), comprueba si se pueden aplicar operaciones de vectores sobre sub-elementos de una matriz, muestra la suma acumulada del primer vector y, la raíz cuadrada de todos los elementos del segundo vector.
+
+```{r}
+# En clase
+```
+
+### Ejercicio 5
+
+Sobre el array del ejercicio 2 (estructura 5,2,3), muestra la media de cada dimensión y, la suma de cada columna por dimensión (elemento a elemento de dimensión).
+
+#### Solución
+```{r}
+# En clase
+```
+
+### Ejercicio 6
+
+Invierte las dimensiones del array del ejercicio 2.
+
+#### Solución
+```{r}
+#En clase
+```
+
+## Listas
+
+Con cierta similaridad a un vector, una **lista**, es una colección de objectos, indexable a través del operador **`[[ ]]`** (doble corchete). Soporta desde el mismo tipo de dato a, diferentes tipos de datos, la declaración de una lista se realiza desde la función **`list`**.
+
+```{r}
+my.list <- list(c(1:40))
+my.list
+```
+
+
+```{r}
+my.list[1] # Solamente tiene un elemento la lista, que es un vector
+```
+
+
+```{r}
+my.list[[1]][5] # Accedemos al primer elemento de la lista, posición 5 del vector.
+```
+
+Algo que es siempre aconsejable para poder identificar los diferentes campos o elementos de una lista, es utilizar nombres.
+```{r}
+new.list <- list(alumnos=c("Juan", "María", "Alfredo"),
+                calificaciones=c(7, 4,5, 9))
+```
+```{r}
+new.list
+```
+
+
+Podemos acceder a sus elementos además de con doble corchetes con un operador especial de R y, que veremos muy comúnmente en dataframes, el operador **`$`**
+
+```{r}
+new.list$alumnos
+
+new.list[["alumnos"]]
+```
+
+Si un elemento no existe en un componente de la lista, simplemente se agrega. 
+```{r}
+new.list$alumnos <- c(new.list$alumnos, "Nuevo alumno")
+new.list$alumnos
+```
+
+
+```{r}
+new.list$edad <- c(15, 16, 17, 15)
+
+new.list
+```
+
+Las listas tienen su clase propia
+```{r}
+class(new.list)
+```
+
+### Ejercicio 7
+
+Toma los siguientes vectores
+```{r}
+equipos <- c("Atlético", "Real Sociedad", "Villareal", "Real Madrid", "Cádiz")
+puntos <- c(26, 25, 21, 20 ,18)
+partidos.jugados <- c(10, 12, 12, 11, 12)
+goles.favor <- c(21, 22, 15, 17, 11)
+```
+
+Crea una lista que contenga los siguientes nombres:
+* Equipos
+* Putos
+* Partidos
+* Goles_Favor
+
+#### Solución
+```{r}
+# En clase
+```
+
+### Ejercicio 8
+
+Con la lista anterior, muestra la media de puntos y la suma total de goles.
+
+#### Solución
+```{r}
+# En clase
+```
+
+## Factores
+
+Los factores son vectores especiales, que se utilizan únicamente, para la representación de variables **categóricas**, los variables categóricas son las que indican una cualidad o característica, como por ejemplo: Alto, Bajo, Medio, etc.
+
+Para crear una una variable categórica, tenemos que pasar un vector de caracteres a la función **`factor`**
+
+```{r}
+var.cat <- factor(c("ENERO", "FEBRERO", "MARZO", "ABRIL"))
+var.cat
+```
+Una variable categórica, se caracteriza porque cada categoría en R, se denomina como nivel *level*, podemos acceder a sus niveles a través de la función **`levels`**
+```{r}
+levels(var.cat)
+```
+
+Este tipo de vectores especiales, tienen su propia clase.
+```{r}
+class(var.cat)
+```
+
+Para eliminar un nivel de una variable categórica, se hará uso de la función **`droplevels`** que recibirá como parámetro la variable categórica y la categoría a eliminar
+
+```{r}
+var.cat = droplevels(x = var.cat, "MARZO")
+
+var.cat
+```
+
+Para transformar un vector cualquiera en categórico se emplea la función **`as.factor`**
+```{r}
+numbers <- rep(1:5, 10)
+
+numbers
+```
+
+```{r}
+numbers.factor <- as.factor(numbers)
+```
+
+```{r}
+levels(numbers.factor)
+```
+
+### Ejercicio 9
+
+Genera una secuencia "ELÉCTRICO", "GASOLINA", "DIÉSEL", 5 veces. Transforma ese vector de tipo carácter en categórico, muestra sus factores.
+
+#### Solución
+```{r}
+# En clase
+```
+
+### Ejercicio 10
+
+Desde este vector categórico.
+```{r}
+bebidas <- factor(c("AGUA", "AGUA", "COCA-COLA", "AGUA", "ZUMO", "ZUMO", "COCA-COLA", "COCA-COLA", "AGUA", "ZUMO"))
+```
+
+Elimina el factor "ZUMO"
+
+#### Solución
+```{r}
+# En clase
+```
+
+## Matrices
+
+Previamente, hemos tratado con arrays multi-dimensionales, una matriz no es ni más ni menos que la dimensión de un array. No obstante, las matrices tienen algunos tipos de funciones especiales con las que podemos trabajar, se describirán posteriormente. 
+
+Para crear una matriz se utiliza la función **`matrix`**, que recibe los datos de la propia matriz y, los parámetros **nrow** y **ncol**, adicionalmente, podremos especificar cómo queremos que se rellene la matriz a partir de los datos, por filas sí o no con el parámetro **byrow**
+
+```{r}
+# Creamos una matriz.
+my.mat <- matrix(1:30, ncol = 6, nrow = 5, byrow = F) # Probar byrow TRUE
+my.mat
+```
+
+Además de todas las funciones ya vistas que pueden realizarse en arrays y las formas disponibles de indexación, en matrices nos encontramos con las siguientes funciones propias:
+
+* **`ncol`**: Devuelve el número de columnas.
+```{r}
+# Número de columnas
+ncol(my.mat)
+```
+
+* **`nrow`**: Devuelve el número de filas.
+```{r}
+# Número de filas
+nrow(my.mat)
+```
+
+* **`diag`**: Devuelve la diagonal de la matriz.
+```{r}
+# Diagonal
+diag(my.mat)
+```
+
+* **`crossprod`**: Realiza el producto entre dos matrices.
+```{r}
+crossprod(x = my.mat, y = my.mat)
+```
+
+* **`t`**: Devuelve la traspuesta de una matriz.
+```{r}
+# Traspuesta
+t(my.mat)
+```
+
+* **`svd`**: Valores singulares de una matriz. (La matriz tiene que ser regular).
+```{r}
+# Valores singulares
+svd(my.mat)
+```
+
+* **`eigen`**: Realiza el cálculo de autovalores y autovectores (La matriz tiene que ser regular).
+```{r}
+# IMPORTANTE: Necesita una matriz regular
+regular.mat <- matrix(1:9, ncol = 3, nrow = 3, byrow = F)
+
+eigen(regular.mat)
+```
+
+Puede transformarse un array como matriz a través de la función **`as.matrix`**.
+```{r}
+new.mat <- new.arr[, , 1]
+
+as.matrix(new.mat)
+class(new.mat)
+```
+
+Las matrices, al igual que el resto de estructuras de datos que se trabajan en esta lección tienen una clase propia
+```{r}
+class(my.mat)
+```
+
+### Ejercicio 11
+
+Crea dos vectores, uno del 1 al 10 otro, del 20 al 30 y crea una matriz de 2 x 10, en la que el primer vector sea la primera fila y el segundo vector la segunda fila.
+
+#### Solución
+```{r}
+#En clase
+```
+
+### Ejercicio 12
+
+Utiliza las siguientes matrices
+```{r}
+A <- matrix(c(1,2,3,4,2,4,6,8,3,6,9,12,0,0,0,0), nrow = 4 , ncol = 4)
+B <- matrix(c(0,0,0,0,2,0,0,0,0,3,0,0,0,0,0,4) ,ncol=4)
+```
+
+Realiza las siguientes operaciones:
+
+* A + B
+* A - B
+* 3B
+* AB
+
+#### Solución
+```{r}
+# En clase
+```
+
+
+### Ejercicio 13
+
+Investiga sobre la función **`solve`** https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/solve
+
+Encuentra la inversa de la siguiente matriz
+```{r}
+lower.diag <- matrix(c(5,15,6,0,4,2,0,0,1),ncol=3,nrow = 3)
+```
+
+#### Solución
+```{r}
+# En clase
+```
+
+### Ejercicio 14
+
+Resuelve el siguiente sistema de ecuaciones lineales. Pista, tienes que utilizar la función `solve`
+
+\left\lbrace \begin{array}{llll}
+6x & -y & + z & =-1\\
+9x & -2y & + z & =-9\\
+3x & +y & -2z & =-9\\
+\end{array}
+\right.
+
+#### Solución
+```{r}
+# En clase
+```
+
+
+## Dataframes
+
+Para finalizar esta sección, se hablará sobre **dataframes**, de forma resumida, un dataframe puede tratarse como una matriz o una lista, ya que cada columna, por lo general, tendrá un nombre, en dataframes hablaremos de variables en lugar de columnas, es importante añadir que todos los registros que aparezcan en el dataframe compartirán el mismo índice a nivel de fila. Un dataframe acepta diferentes tipos de datos.
+
+Para aprender las características y diferentes funcionalidades que ofrece un dataframe, trabajaremos directamente con un archivo csv, la función encargada de leer, cargar y transformar un archivo csv como dataframe es **`read.csv`**, es importante revisar otros parámetros como **sep**, **header** o, **na.strings** en el caso de que ya conozcamos de antemano que el dataset tiene valores nulos que son representados por otros valores o caracteres
+
+```{r}
+df <- read.csv("FB.csv")
+```
+
+De un modo similar a las listas, puede llamarse a las columnas a través de dobles corchetes, con el operador $ o, a través de indexación.
+```{r}
+df$Open
+```
+
+```{r}
+df[2]
+```
+
+
+```{r}
+df[[2]]
+```
+
+```{r}
+df[["Open"]]
+```
+
+Los dataframes también tienen un tipo especial de clase
+```{r}
+class(df)
+```
+
+Para ahorrar trabajo y, no necesariamente tener que escribir siempre el nombre del dataframe cuando queremos trabajar con una variable, puede utilizarse la función **`attach`** y cargará todas las columnas como variables.
+
+```{r}
+attach(df)
+
+Date
+```
+
+El resultado en todos los casos es un vector sobre el que podemos aplicar las mismas funciones de indexación y operaciones ya vistas en la sección de vectores.
+
+```{r}
+# Suma de la variable Open
+sum(df$Open)
+```
+
+
+```{r}
+# Mostramos las posiciones 3 a 8 de la variable Open
+df$Open[3:8]
+```
+
+
+```{r}
+# Filtramos la variable open por todos los valores superiores o iguales que 40
+df[df$Open >= 40, ]
+```
+
+
+```{r}
+# Seleccionamos las filas 100 a 110 de todas las columnas a excepción de la segunda y tercera
+df[100:110, -c(2,3)]
+```
+
+Cuando ha finalizado el trabajo con el dataframe, utilizaremos **`detach`** para que sea necesario declarar el nombre del dataframe, para trabajar con él.
+```{r}
+detach(df)
+```
+
+```{r}
+# Probar ahora a introducir Date
+```
+
+### Ejercicio 15
+
+Lee el archivo 'compras_uno.csv' como dataframe
+
+#### Solución
+```{r}
+# En clase
+```
+
+### Ejercicio 16
+
+Lee el archivo 'compras_dos.csv' como dataframe
+
+#### Solución
+```{r}
+# En clase
+```
+
+### Ejercicio 17
+
+Lee el archivo 'compras_tres.csv' como dataframe
+
+#### Solución
+```{r}
+# En clase
+```
+
+### Ejercicio 18
+
+Lee el archivo "FB.csv" sin cabecera
+
+#### Solución
+```{r}
+# En clase
+```
+
+Algunas funciones principales que podemos realizar en un dataframe.
+
+* **`summary`**: Devuelve un resumen estadístico de un dataframe.
+```{r}
+# Resumen estadístico de un dataframe
+summary(df)
+```
+
+### Pregunta
+
+¿Se puede hacer un resumen estadístico de solamente una variable del dataframe?
+```{r}
+
+```
+
+* **`str`**: Devuelve el tipo de variable del dataframe.
+```{r}
+# Estructura columnar de un dataframe
+str(df)
+```
+
+* **`attributes`**: Devuelve el nombre de las filas y columnas.
+```{r}
+# Nombre de filas y columnas
+attributes(df)
+```
+
+* **`dim`**: Dimensiones del dataframe filas x columnas
+```{r}
+# Dimensiones de un dataframe
+dim(df)
+```
+
+* **`colnames`**: Nombre de las columnas del dataframe.
+```{r}
+# Nombre de las columnas de un dataframe
+colnames(df)
+```
+
+* **`rownames`**: Nombre de las filas del dataframe.
+```{r}
+# Nombre de las filas
+rownames(df)
+```
+
+* **`nrow`**: Número de filas.
+```{r}
+# Número de filas
+nrow(df)
+```
+
+* **`ncol`**: Número de columnas.
+```{r}
+# Número de columnas
+ncol(df)
+```
+
+* **`head`**: Primeras n posiciones del dataframe.
+```{r}
+# Primeras posiciones de un dataframe, por defecto
+head(df)
+```
+```{r}
+# Primeras 10 posiciones
+head(df, 10)
+```
+
+* **`tail`**: Últimas n posiciones del dataframe.
+```{r}
+# Últimas posiciones de un dataframe, por defecto.
+tail(df)
+```
+
+```{r}
+# Últimas 4 posiciones
+tail(df, 4)
+```
+
+Finalmente, se muestran algunas de las principales transformaciones que pueden aplicarse a un dataframe.
+
+Mediante **`rbind`** se añade una nueva fila, por su parte, **`cbind`** añade una nueva columna.
+```{r}
+df <- rbind(df, c("2013-03-01", 35.12, 39.32, 32.75, 34.65, 57052800, 34.65))
+
+tail(df)
+```
+```{r}
+index.list <- list(index=1:nrow(df))
+```
+
+
+```{r}
+df <- cbind(df, index.list)
+
+head(df)
+```
+
+Otra forma de añadir una columna al dataframe simplemente es asignar el nombre a través del operador $ y un vector de la misma longitud.
+```{r}
+df$Nueva_Columna <- as.numeric(vec)^2
+
+head(df)
+```
+
+Si se desea eliminar una variable, aplicaremos **NULL** a la variable
+```{r}
+# Borramos la columna
+df$index <- NULL
+```
+
+Para obtener un sub-conjunto del dataframe, empleamos **`subset`**, para seleccionar las columnas a tener en cuenta, aplicaremos el parámetro **select**
+```{r}
+muestra <- subset(df, select = c("High", "Low"))
+
+muestra
+```
+
+Para ordenar un dataframe, disponemos de la función **`order`**
+```{r}
+ordered <- df[order(df$Open, decreasing = T), ]
+
+head(ordered)
+```
+
+Si mediante la función **`names`**, accedemos a los nombres de las variables, es posible renombrar las columnas
+
+```{r}
+# Renombramos una columna
+names(df)[2] <- "Precio-Apertura"
+
+names(df)
+```
+
+Con la función **`as.data.frame`**, se pueden convertir vectores, matrices, listas y arrays como dataframes.
+```{r}
+# Tomamos un array anterior, importante, estudiar cómo se distribuyen las dimensiones.
+new.df <- as.data.frame(new.arr)
+
+new.df
+```
+
+Finalmente, es importante cómo gestionar los nulos en un dataframe. Primero, tomaremos una observación como valor nulo.
+```{r}
+new.df[3, 1] <- NA
+```
+
+Una forma inicial de comprobar si tenemos nulos en nuestro dataframe, es a través del comando summary
+```{r}
+summary(new.df) # Aparece un nulo en V1
+```
+
+Otra manera es utilizar la función **`is.na`**
+```{r}
+is.na(new.df)
+```
+
+Pueden detectarse las filas en las que hay nulos a través de **`complete.cases`**
+```{r}
+complete.cases(new.df)
+```
+
+Si se decide borrar los casos nulos haremos:
+```{r}
+new.df <- new.df[complete.cases(new.df), ]
+
+new.df
+```
+
+Si, por el contrario, interesa reemplazar el valor nulo por otro valor.
+```{r}
+new.df <- as.data.frame(new.arr)
+new.df[3, 2] <- NA
+
+new.df$V2[which(is.na(new.df$V2))] <- 1000
+
+new.df
+```
+
+### Ejercicio 19
+
+Carga el csv airports (recuerda que \N debe interpretarse como valor nulo) y realiza los siguientes apartados:
+
+* Carga el dataset como dataframe.
+* Muestra un resumen estadístico.
+* Muestra la estructura del dataframe.
+* Elimina las columnas 'AirportID', 'Latitude', 'Longitude' y 'Altitude'
+* Borra todos los nulos.
+* Muestra el nombre del país y del aeropuerto que sean pertenecientes a la ciudad de Madrid o Barcelona.
+
+#### Solución
+```{r}
+# En clase
+```
+
+

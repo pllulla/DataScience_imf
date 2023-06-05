@@ -1,0 +1,230 @@
+---
+title: "Sintáxis básica de R"
+output:
+  word_document: default
+  pdf_document: default
+  html_document:
+    df_print: paged
+autor: Juan Manuel Moreno
+---
+
+En el presente notebook se introducirá al alumno a la sintaxis de R, antes de comenzar su andadura a través de las principales estructuras de datos, el contenido del siguiente notebook se estructurará a través de los siguientes apartados:
+
+* **Objetos**
+* **Comentarios**
+* **Operadores**
+* **Tipos de variables**
+
+## Objetos
+
+Cualquier variable, función, parámetro, etc. que se declare en R se denomina **objeto** 
+
+Para crear un objeto en R a diferencia de otros lenguajes de programación, no se utiliza el operador de asignación **=**, si no que utilizamos la asignación de forma direccional, es decir, con los siguientes elementos:
+
+* `<-` 
+* `->`
+
+Los objetos son mutables, es decir, podemos cambiar su valor en cualquier momento, realizando una nueva asignación. Todos los objetos de R, se almacenan en memoria RAM, hasta que cerramos el programa o, limpiamos el entorno de variables.  Mediante el comando **`ls`** podemos ver todos los objetos que tenemos almacenados en memoria.
+
+```{r, warning=FALSE}
+ls()
+```
+
+En algunas ocasiones, nos encontraremos con que hemos almacenado objetos demasiado grandes en memoria, que una vez realizada uan operación, deseamos elimnar, para ello, disponemos de la función **`rm`**, a la cuál, pasaremos como parámetro el nombre de la variable a eliminar.
+
+```{r}
+rm(a)
+print(ls())
+```
+
+No obstante, para ahorrarnos ciertos pasos como carga y creación de archivos y objetos, si lo deseamos, podremos guardar además del notebook o script, todo el entorno de variables y objetos, simplemente al guardarlo, le asignaremos un nombre y, se guardará con extensión .Rdata, cuando abramos la sesión, se restaurarán todos los objetos que teníamos almacenados.
+
+## Comentarios
+
+En R podemos utilizar dos tipos de comentario:
+
+* De una línea, simplemente utilizaremos el operador **`#`** y agregaremos el comentario
+* Multi-línea, para ello abriremos el comentario con comillas dobles **`"`**y, hasta que no volvamos a incluir comillas dobles, no se cerrará el comentario.
+
+```{r}
+# Comentario de una línea
+
+# Otra línea
+```
+
+```{r}
+"
+Comentario
+de
+varias
+líneas
+"
+```
+
+Para facilitarnos el trabajo, en R, se pueden comentar varias líneas a la vez, para ello realizaremos:
+
+* Selección de las líneas
+* Sobre las línesa seleccionadas: CNTRL + SHIFT + C
+
+## Operadores
+
+En R existen operadores de diferentes tipos:
+
+* **Aritméticos**
+* **Comparaicón**
+* **Lógicos**
+
+Definimos algunas variables para mostrar los operadores
+```{r}
+a <- 7
+b <- 2
+```
+
+
+Operadores aritméticos
+```{r}
+# Suma
+a + b
+
+# Resta
+a - b
+
+# Multiplicación
+a * b
+
+# División
+a / b
+
+# Exponencial
+a ^ b
+
+# Módulo o resto de una división
+a %% b
+
+# División entera
+a %/% b
+```
+
+Operadores de comparación
+```{r}
+# Menor que 
+a < b
+
+# Mayor que
+a > b
+
+# Menos o igual que
+a <= b
+
+# Mayor o igual que
+a >=b
+
+# Igualdad
+a == b
+
+# No es igual que
+a != b
+```
+
+Operadores lógicos
+```{r}
+# Negación
+!TRUE # Equivalente con T
+
+# AND Lógico
+TRUE & TRUE
+TRUE & FALSE
+
+# OR Lógico
+TRUE | FALSE
+FALSE | FALSE
+```
+
+### Ejercicio 1
+
+Ahora, ya sabemos cómo utilizar operadores, toma las siguientes asignaciones y, determina si son impares o no.
+
+```{r}
+x <- 5
+y <- 6.22
+z <- 13 
+w <- 4
+```
+
+#### Solución
+```{r}
+# En clase
+
+```
+
+
+## Tipos de variables
+
+En R, vamos a poder distinguir tres tipos de variables, esto es independiente del tipo de estructura que utilicemos para su almacenamiento y procesamiento:
+
+* Numéricas
+* Carácter
+* Booleanas
+* Factor
+
+Para determinar el tipo de una variable, utilizaremos la función **`class`**
+
+```{r}
+class(5)
+
+class(3.9)
+
+class("Hola")
+
+class(TRUE)
+class(T)
+
+# Por el momento, no prestaremos mucha atención sobre la construcción
+#  de tipos factor, esto se explicará en detalle en próximas unidades
+class(as.factor('A'))
+
+```
+
+### Pregunta
+
+¿Qué tipo de dato tendrá la siguiente asignación?
+
+```{r}
+a <- "5"
+class(a)
+```
+
+### Ejercicio 2
+
+Sabiendo que la fórmula de la velocidad es `V=E/t`, calcula a qué velocidad ha ido un vehículo que ha recorrido 150 KM en dos horas.
+
+#### Solución
+
+```{r}
+E <- 150
+t <- 2
+
+V <- E / t
+```
+```{r}
+print(V)
+```
+
+### Ejercicio 3
+
+La fórmula para calcular el índice de masa corporal o IMC es el peso entre la altura al cuadrado `IMC = peso / (altura^2)`. Determina cuál será el IMC de una persona con un peso de 89.45 Kg y una altura de 1.86
+
+#### Solución
+```{r}
+peso <- 89.45
+altura <- 1.86
+```
+
+```{r}
+# Calculamos el IMC
+IMC <- peso / (altura ^ 2)
+
+cat("El IMC es: ", IMC)
+```
+
+

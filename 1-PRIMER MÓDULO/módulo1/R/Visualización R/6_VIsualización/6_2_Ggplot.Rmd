@@ -1,0 +1,416 @@
+---
+title: "UD2 N01"
+output:
+  html_document: default
+  html_notebook: default
+  pdf_document: default
+---
+
+# Tipos de gráficas básicas y variantes en `ggplot`
+
+## Scatterplots
+Pintamos una gráfica de dispersión de las variables distancia de frenada y velocidad de cars. Se observa que mayor velocidad implica mayor distancia de frenada en general.
+```{r}
+data(cars)
+help(cars)
+head(cars)
+plot(cars)
+```
+
+Cargamos la librería ggplot para ver cómo mejora los dibujos básicos que tiene integrados R. Hay que instalarla antes de cargarla con el comando comentado
+```{r}
+# install.packages("ggplot2")
+library(ggplot2)
+```
+
+
+```{r}
+ggplot(cars, aes(x=speed, y=dist)) + #carga los datos y establece las variables
+    geom_point(shape=1)      # usa círculos huecos
+```
+```{r}
+ggplot(cars, aes(x=speed, y=dist)) + #carga los datos y establece las variables
+    geom_point()  
+```
+Podemos definir dónde empleamos las variables para la capa de representación.
+
+```{r}
+ggplot(cars) + 
+    geom_point(aes(x=speed, y=dist))  
+```
+
+
+```{r}
+ggplot(cars, aes(x=speed, y=dist)) +
+    geom_point(shape=1) +    #  usa círculos huecos
+    geom_smooth(method=lm)   # añade recta de regresión con intervalo de confianza 95%
+```
+
+```{r}
+ggplot(cars, aes(x=speed, y=dist)) +
+    geom_point(shape=1) +    # usa círculos huecos
+    geom_smooth(method=lm, se=FALSE)  # añade recta de regresión sin región de confianza
+```
+
+
+```{r}
+ggplot(cars, aes(x=speed, y=dist)) +
+    geom_point(shape=1) +   # usa círculos huecos
+    geom_smooth()           # añade una curva suavizada sobre los datos y su región de confianza
+```
+
+Más gráficos de dispersión, ahora con un dataset de información sobre diamantes.
+
+```{r}
+#cargamos datos
+data(diamonds)
+head(diamonds)
+str(diamonds)
+```
+```{r}
+ggplot(diamonds, aes(x = carat, y = price)) + geom_point()
+```
+
+```{r}
+redIMF <- "#8f3237"
+lightRedIMF <- "#a75156"
+```
+
+```{r}
+ggplot(diamonds, aes(x = carat, y = price)) + 
+  geom_point(aes(color=price)) + 
+  scale_color_continuous("Precio", low = "lightblue", high = "darkblue") 
+
+# https://www.datanovia.com/en/blog/ggplot-gradient-color/
+```
+```{r}
+ggplot(diamonds, aes(x = carat, y = price)) + 
+  geom_point(aes(color=price)) + 
+  scale_color_continuous("Precio", low = redIMF, high = lightRedIMF)
+```
+
+
+```{r}
+#se puede usar un shape específico para los puntos
+ggplot(diamonds, aes(x = carat, y = price)) + 
+  geom_point(shape = 25, size = 1)
+```
+
+
+```{r}
+#se puede pintar en función de un factor
+ggplot(diamonds, aes(x = carat, y = price, colour = cut)) + 
+  geom_point(size = 1.5)
+```
+
+
+```{r}
+#incluso se puede representar en una escala de grises en función del valor de un atributo continuo
+easy <- ggplot(diamonds, aes(x = carat, y = price))
+
+easy + geom_point(alpha = 0.1)
+```
+
+
+```{r}
+easy + geom_point(alpha = 0.05)
+```
+
+
+```{r}
+#se puede hacer un scatterplot con bins en rectángulos coloreados en función de una variable
+bin <- ggplot(diamonds, aes(x = carat, y = price))
+bin + stat_bin2d()
+```
+```{r}
+bin + stat_binhex()
+```
+
+```{r}
+#se pueden hacer gráficos aún más sofisticados:
+bin + stat_binhex() + scale_fill_gradient(low = "lightblue", 
+                                          high = "red",
+                                          breaks = c(0, 500, 1000, 
+                                                     2000, 4000, 6000, 8000), 
+                                          limits = c(0, 8000)) + 
+  stat_smooth(method = lm) + 
+  ylim(0, 20000)
+```
+
+## Histogramas
+
+Cargamos el dataset de vehículos y consumos. Pintamos un histograma de sus consumos en autovía.
+```{r}
+data(mpg)
+help(mpg)
+head(mpg)
+hist(mpg$hwy)
+```
+Representaciones en ggplot de histogramas con opciones de curva de densidad y establecimiento del número de barras en las que se parte la representación.
+
+```{r}
+ggplot(mpg, aes(x=hwy)) + geom_histogram(binwidth=5) #establece el ancho de cada partición
+```
+
+```{r}
+ggplot(mpg, aes(x=hwy)) + geom_histogram(bins=30) # establece el número de particiones
+```
+
+```{r}
+ggplot(mpg, aes(x=hwy)) +
+    geom_histogram(binwidth=.5, colour="black", fill="white") #opciones de color
+```
+
+
+```{r}
+ggplot(mpg, aes(x=hwy)) +
+    geom_histogram(binwidth=5, colour="black", fill="white") #opciones de color
+```
+
+```{r}
+# pinta una curva de densidad
+ggplot(mpg, aes(x=hwy)) + geom_density(fill="red")
+```
+
+
+```{r}
+# histograma con curva de densidad
+ggplot(mpg, aes(x=hwy)) + 
+  
+    geom_histogram(aes(y=..density..),      
+                   binwidth=2,
+                   colour="black", fill="blue") +
+  
+    geom_density(alpha=.2, fill="red")  #rellenado de la curva de densidad en rojo suave
+```
+
+
+También se pueden representar histogramas en los que se divida la variable respecto a varias categorías. Para ello vamos a seleccionar dos: manufacturadores, audi y volkswagen
+
+```{r}
+mpg_subset <- mpg[mpg$manufacturer=="audi" | mpg$manufacturer=="volkswagen" , ]
+str(mpg_subset)
+```
+
+```{r}
+# histogramas superpuestos
+ggplot(mpg_subset, aes(x=hwy, fill=manufacturer)) +
+    geom_histogram(binwidth=2, 
+                   alpha=.5, 
+                   position="identity")
+```
+
+
+```{r}
+# histogramas intercalados
+ggplot(mpg_subset, aes(x=hwy, fill=manufacturer)) +
+    geom_histogram(binwidth=2, 
+                   position="dodge")
+```
+
+
+```{r}
+# curvas de densidad
+ggplot(mpg_subset, aes(x=hwy, fill=manufacturer)) + geom_density()
+```
+
+
+```{r}
+# curvas de densidad con rellenado transparente
+ggplot(mpg_subset, aes(x=hwy, fill=manufacturer)) + 
+  geom_density(alpha=.3)
+```
+
+
+## Gráficos de barras
+
+Cargamos un dataset de propinas para observar su distribución
+
+```{r}
+# install.packages("reshape2")
+library(reshape2)
+data(tips)
+help(tips)
+head(tips)
+```
+
+```{r}
+# gráfico de barras básico de factura total respecto a hora del día
+# se consume más en el almuerzo que en la cena
+ggplot(data=tips, aes(x=time, y=total_bill)) +
+    geom_bar(stat="identity")
+```
+
+
+```{r}
+# pintamos la anterior gráfica de barras según la categoría fumador
+ggplot(data=tips, aes(x=time, y=total_bill, fill=smoker)) +
+    geom_bar(stat="identity")
+
+```
+
+Se puede observar que el sábado es cuando cada mesa paga más en media.
+
+```{r}
+colnames(tips)
+```
+
+```{r}
+ggplot(data=tips, aes(x=day, fill=sex)) +
+    geom_bar(stat="count")
+```
+
+```{r}
+#cuenta de clientes por día
+ggplot(data=tips, aes(x=day, fill=sex)) +
+    geom_bar(stat="count", position="dodge")
+```
+
+
+```{r}
+#cuenta de media de  facturas por día
+ggplot(data=tips, aes(x=day, y=total_bill)) +
+   stat_summary(fun = mean, 
+                color="red", 
+                geom="bar") 
+```
+
+## Gráficos de caja o *boxplot*
+
+```{r}
+# Precio en función del tipo de diamante.
+p <- ggplot(diamonds, aes(cut, price))
+p + geom_boxplot()
+```
+
+
+```{r}
+#propina en función de día
+#el domingo pagan más en media pero el sábado hay más gente optimista con propinas altas
+ggplot(tips, aes(day, tip)) +  
+  geom_boxplot() + 
+  coord_flip()
+```
+
+## Faceting
+
+Cargamos ahora otro dataset
+```{r}
+data(mpg)
+head(mpg)
+str(mpg)
+```
+
+Creamos gráficos categóricos con colores en función de factores
+```{r}
+qplot(data = mpg, x = displ, y = hwy, color = manufacturer)
+```
+
+```{r}
+qplot(data = mpg, x = displ, y = hwy, color = class)
+```
+
+Recordamos, faceting consiste en agrupar el dataframe según factores y pintar scatterplots de variables en función de esos agrupamientos:
+```{r}
+qplot(data = mpg, x = displ, y = hwy, 
+      color = manufacturer, facets = ~class)
+```
+
+Pintamos con recta de ajuste:
+
+```{r}
+myGG <- ggplot(mpg, aes(x = displ, y = hwy))
+myGG + geom_point(aes(color = manufacturer)) + stat_smooth(method = lm)
+```
+
+```{r}
+myGG + geom_point(aes(color = manufacturer)) + 
+  stat_smooth(method = lm, se = FALSE) + 
+    facet_grid(class ~ .)
+```
+
+## Ajustando modelos lineales gráficamente
+Veremos otro tipo de dibujos que se pueden hacer sobre los scatterplots en los que aparecen representados modelos lineales con su rango de variación con un cierto intervalo de confianza.
+Cargamos otro data set
+
+```{r}
+data(cars)
+head(cars)
+str(cars)
+```
+
+```{r}
+sp <- ggplot(cars, aes(x = speed, y = dist))
+sp + geom_point()
+```
+Añadimos recta de regresión con región de variación
+```{r}
+sp + geom_point() + stat_smooth(method = lm)
+```
+
+Modificamos el intervalo de confianza:
+```{r}
+sp + geom_point() + stat_smooth(method = lm, level = 0.99)
+```
+
+Pintamos una curva regularizada ó regresión lineal suavizada
+```{r}
+# Loess
+sp + geom_point() + stat_smooth(method = loess, se = FALSE)
+```
+
+## Más Faceting
+```{r}
+library(reshape2)
+# Look at first few rows
+head(tips)
+str(tips)
+```
+
+```{r}
+sp <- ggplot(tips, aes(x=total_bill, y= tip/total_bill)) + geom_point(shape=1)
+sp
+```
+
+```{r}
+sp + facet_grid(sex ~ .)
+```
+
+```{r}
+sp + facet_grid(. ~ sex)
+```
+Dividimos por *sex* en horizontal y  *day* en vertical:
+```{r}
+sp + facet_grid(sex ~ day)
+```
+
+Dividimos por día en horizontal y vertical construyendo dos a dos las columnas
+
+```{r}
+sp + facet_wrap( ~ day, ncol=2)
+```
+Más opciones:
+```{r}
+# A histogram of bill sizes
+hp <- ggplot(tips, aes(x=total_bill)) + geom_histogram(binwidth=2,colour="white")
+```
+
+
+```{r}
+# Histogram of total_bill, divided by sex and smoker
+hp + facet_grid(sex ~ smoker)
+```
+
+```{r}
+# Same as above, with scales="free_y"
+hp + facet_grid(sex ~ smoker, scales="free_y")
+```
+
+```{r}
+# With panels that have the same scaling, but different range (and therefore different physical sizes)
+hp + facet_grid(sex ~ smoker, scales="free", space="free")
+```
+
+
+
+

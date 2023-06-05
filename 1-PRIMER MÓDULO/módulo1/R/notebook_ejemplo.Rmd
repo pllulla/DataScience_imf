@@ -1,0 +1,153 @@
+---
+title: "Mi primer notebook"
+output:
+  html_document:
+    df_print: paged
+  word_document: default
+---
+
+# Título de la sección
+
+Este es mi título de __R Notebook__ 
+
+## Sub título
+
+Este es un título de segundo nivel
+
+```{r}
+a <- 5
+
+# Para elevar al cuadrado, ya no es **, es el símbolo ^ 
+a ^ 2
+```
+
+Para comentar más de una línea a la vez: **CNTRL + SHIFT + C**
+
+```{r}
+# En funciones, bucles, clases, condicionales... ya no usamos :
+# Se usa { }
+
+# def suma(a,b):
+#   return a + b
+# 
+# suma <- function(a, b){
+#   # El return en R siempre va entre paréntesis
+#   return (a + b)
+# }
+# 
+# suma(a = 8, b = 10)
+```
+
+__CNTRL + ALT + I__ Para generar una nueva celda de código
+
+```{r}
+a %% 2 == 0
+```
+
+### Cargamos un dataframe
+
+```{r}
+df <- read.csv("C:/Users/JMMoreno/Desktop/6_PRESENCIAL_DATA_SCIENCE_6_EDICION/7_26_04_Visualización_Python/vgsales.csv")
+```
+
+```{r}
+df
+```
+
+Mostrar la cabecera
+```{r}
+# Python
+# df.head()
+
+# R
+head(df)
+```
+
+
+```{r}
+# Para separar celdas en R es CNTRL + ALT + I
+tail(df)
+```
+
+Resumen estadístico
+
+```{r}
+# Python
+#df.describe()
+
+# R
+summary(df)
+```
+
+
+```{r}
+a <- read.csv("C:/Users/JMMoreno/Desktop/6_PRESENCIAL_DATA_SCIENCE_6_EDICION/6_25_04_Pandas/housing_California.csv")
+```
+
+```{r}
+summary(a)
+```
+Seleccionar columnas
+
+```{r}
+df$Publisher[20:50:2]
+```
+
+```{r}
+colnames(df)
+```
+
+Ejemplo de vector
+```{r}
+a <- c(70, 90, 100, 1909)
+```
+
+La posición cero, guarda el tipo del vector
+```{r}
+a[2] <- 589785
+```
+
+```{r}
+a
+```
+
+```{r}
+b <- c(
+  c(78,52,13),
+  c(10296, 123.54, 754),
+  c(90, 19)
+)
+
+b
+```
+```{r}
+b[0]
+```
+
+```{r}
+df$Sin_JP <- c(df$NA_Sales + df$EU_Sales + df$Other_Sales)
+```
+
+```{r}
+head(df)
+```
+
+Para borrar columnas
+```{r}
+df$Sin_JP <- NULL
+```
+
+```{r}
+colnames(df)
+```
+
+```{r}
+hist(df$Global_Sales,
+     main = "Histograma de ventas totales",
+     border = "grey", col = "darkgreen"
+     )
+```
+
+
+
+

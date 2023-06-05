@@ -1,0 +1,283 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+# Ejercicios complementarios R
+
+### Ejercicio 1
+
+Crea una secuencia con los números del 40 al 100, primero utilizando la función `seq` y después como rango personalizado. 
+
+#### Solución
+```{r}
+# Primero, con seq
+#  como tal, es una secuencia de 1 en 1
+seq(40, 100, 1)
+```
+
+```{r}
+# Con un rango personalizado
+40:100
+```
+
+```{r}
+# No es necesario siempre incluirlos en la función concatenate
+c(40:100)
+```
+
+### Ejercicio 2
+
+Crea un vector desde el 20 al 60 y muestra la suma de sus números
+
+#### Solución
+
+```{r}
+# Creamos el vector
+vec <- 20:60
+
+# Mostramos la suma
+sum(vec)
+```
+
+### Ejercicio 3
+
+Crea un vector con las posiciones de 0 a 100 tomadas de dos en dos y muestra la media del vector
+
+#### Solución
+
+```{r}
+# Para obtener la secuencia de 2 en 2, tenemos que utilizar seq
+vec <- seq(0, 100, 2)
+
+print(mean(vec))
+```
+
+
+### Ejercicio 4
+
+Toma los siguientes vectores
+```{r}
+equipos <- c("Atlético", "Real Sociedad", "Villareal", "Real Madrid", "Cádiz")
+puntos  <- c(26, 25, 21, 20 ,18)
+partidos.jugados <- c(10, 12, 12, 11, 12)
+goles.favor      <- c(21, 22, 15, 17, 11)
+```
+
+Crea una lista y, posteriormente. Crea un array con los atributos puntos, partidos y goles a favor que contenga en cada dimensión el atributo de la lista junto con el valor de ese atributo al cuadrado, por lo tanto, para cada atributo se generará un vector de 10 posiciones, la matriz tendrá una estructura de 2, 5, 3
+
+#### Solución
+
+```{r}
+# Creamos una lista 
+teams.list <- list(
+  equipos = c("Atlético", "Real Sociedad", "Villareal", "Real Madrid", "Cádiz"),
+  puntos  = c(26, 25, 21, 20 ,18),
+  partidos.jugados = c(10, 12, 12, 11, 12),
+  goles.favor      = c(21, 22, 15, 17, 11)
+)
+```
+
+```{r}
+team.stats <- array(
+ # Definimos los datos
+ data = c(
+  c(teams.list$puntos, teams.list$puntos ^2),
+  c(teams.list$partidos.jugados, teams.list$partidos.jugados^2),
+  c(teams.list$goles.favor, teams.list$goles.favor^2)), 
+ # Definimos las dimensiones
+ dim = c(2,5,3)
+)
+
+# Mostramos el array
+team.stats
+
+
+```
+### Ejercicio 5
+
+Dada la siguiente matriz:
+```{r}
+M <- matrix(c(1:16), nrow = 4, byrow = TRUE)
+```
+
+Accede a los siguientes elementos:
+
+* 3 columna 2 fila.
+* Solo la segunda fila
+* Accede a la cuarta columna
+* De la cuarta columna la segunda y cuarta fila
+
+#### Solución
+
+```{r}
+M
+```
+
+```{r}
+M[2,3] # Tercera columna segunda fila
+```
+
+```{r}
+M[2, ] # Solo la segunda fila
+```
+
+```{r}
+M[, 4] # Accede a la cuarta columna
+```
+```{r}
+M[c(2,4) ,4] # De la cuarta columna la segunda y cuarta fila
+```
+
+### Ejercicio 6
+
+Escribe un programa que calcule el nuevo salario de un trabajador, tomaremos un aumento del sueldo del 10% si el salario es mayor que 1000 euros, si es menor, un 15%
+
+#### Solución
+```{r}
+
+salario <- as.numeric(readline("Introduce tu salario: "))
+
+if (salario > 1000){
+  sueldo <- salario+(salario*0.10)
+  cat("Tu salario es: ", sueldo)
+} else {
+  sueldo <- salario+(salario*0.15)
+  cat("Tu salario es: ", sueldo)
+}
+```
+
+### Ejercicio 7
+
+Escribe un programa que solicite al usuario dos números, para realizar una división, si el segundo número es cero, indicar un mensaje advirtiendo de que no se puede dividir entre cero, en caso contrario mostrar el resultado de la división.
+
+#### Solución
+```{r}
+
+numero.uno <- as.numeric(readline("Introduce un número: "))
+numero.dos <- as.numeric(readline("Introduce otro número: "))
+
+if ( (numero.dos <= 0) | (numero.uno < 0) ) {
+  print("No puedes dividir entre cero !")
+} else {
+  cat("Resultado de la división ", numero.uno/numero.dos)
+}
+```
+
+### Ejercicio 8
+
+La entrada a un parqute temático es de 30€ por persona, no osbtante, existen algunos descuentos especiales como los siguientes:
+
+* Niños menores de 3 años, un descuento del 70%
+* Niños entre 3 y 10 años, un descuento del 50%
+* Niños mayores de 10 y menores de 12, un descuento del 20%
+* Para el resto de personas, sin descuento.
+
+#### Solución
+```{r}
+entrada.parque <- 30
+
+edad.entrada <- readline(prompt = "Introduce la edad: ")
+edad.entrada <- as.numeric(edad.entrada)
+```
+
+```{r}
+if (edad.entrada < 3){
+  cat("Descuento 70%", entrada.parque - (entrada.parque * 0.7) )
+  
+} else if (edad.entrada >= 3 & edad.entrada < 10){
+  cat("Descuento 50%",entrada.parque - (entrada.parque * .5) )
+  
+} else if (edad.entrada >= 10 & edad.entrada < 12){
+  cat("Descuento 20%", entrada.parque - (entrada.parque * .2) )
+  
+} else {
+  cat("Precio de ", entrada.parque)
+}
+```
+
+### Ejercicio 9
+
+Mediante una secuencia de números del 0 al 10, si el número es par, se devuelve su valor al cuadrado, si es impar, se devuelve su valor entre dos.
+
+#### Solución
+```{r}
+secuencia <- c(0:10)
+
+for (valor in 1:length(secuencia)){
+  
+  if (secuencia[valor] %% 2 == 0){
+    cat(secuencia[valor], " - ", secuencia[valor] ^ 2, "\n")
+  } else {
+    cat(secuencia[valor], " - ", secuencia[valor] / 2 , "\n")
+  }
+}
+```
+
+### Ejercicio 8
+
+Toma el siguiente vector
+```{r}
+mil <- c(1:1000)
+```
+
+Guarda en un vector todos aquellos números que sean divisibles entre 3 y 5
+
+#### Solución
+```{r}
+
+# Vector vacío
+vec <- c()
+# Indice para el vector
+indice <- 1
+
+for (numero in 1:length(mil)){
+  
+  # Controlar si numero %% 3 y %% 5
+  
+  if ( (numero %% 3 == 0) & (numero %% 5 == 0) ){
+    # Guardamos en la posición del índice el número
+    vec[indice] <- numero
+    # Aumentamos en 1 el índice del vector vec
+    indice <- indice + 1
+    
+  } else {
+    
+    next
+  }
+  
+}
+```
+
+### Ejercicio 10
+
+Escribe un programa que solicite un número entero mayor que cero y cualcule su factorial.
+
+NOTA: La función factorial se representa con un signo de exclamación “!” detrás de un número. Esta exclamación quiere decir que hay que multiplicar todos los números enteros positivos que hay entre ese número y el 1.
+
+6! = 1\*2\*3\*4\*5\*6 = 720
+
+#### Solución
+```{r}
+numero.entrada <- as.numeric(readline("Introduce un numero: "))
+```
+
+```{r}
+if (numero.entrada <= 0){
+  cat("El número debe ser mayor que cero \n")
+  
+} else {
+  factorial <- 1
+  
+  for (valor in 2:numero.entrada){
+    
+    factorial <- factorial * valor
+      
+  }
+}
+```
+
+```{r}
+factorial
+```
+
